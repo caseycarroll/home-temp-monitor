@@ -94,7 +94,7 @@ func serveTemplate(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, dataList)
 }
 
-func JSONRequest(w http.ResponseWriter, r *http.Request) {
+func sendClimateJSON(w http.ResponseWriter, r *http.Request) {
 	refreshList()
 	json.NewEncoder(w).Encode(dataList)
 }
@@ -105,7 +105,7 @@ func main() {
 
 	fs := http.FileServer(http.Dir("static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
-	http.HandleFunc("/climatereadings", JSONRequest)
+	http.HandleFunc("/climatereadings", sendClimateJSON)
 	http.HandleFunc("/", serveTemplate)
 	fmt.Println("serving at :8080")
 	http.ListenAndServe(":8080", nil)
