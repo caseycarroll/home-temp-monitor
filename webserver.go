@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"html/template"
 
 	"fmt"
@@ -14,24 +15,23 @@ import (
 )
 
 type ClimateReading struct {
-	Temp     float32
-	Humidity float32
-	Time     int
-	Mood     string
+	Temp     float32 `json:"temp"`
+	Humidity float32 `json:"humidity"`
+	Time     int     `json: "time"`
+	Mood     string  `json: "mood"`
 }
 
 type AllData struct {
-	Readings         []ClimateReading
-	LatestReading    ClimateReading
-	xAxisLabels      []int
-	yAxislabels      []float32
-	graphPointValues []int
+	Readings      []ClimateReading
+	LatestReading ClimateReading
 }
 
 var (
 	dataList AllData
 	mysqlDB  *sql.DB
 )
+
+const GraphSize = 400
 
 func initMySQL() {
 	//open mysql server
@@ -43,47 +43,45 @@ func initMySQL() {
 func refreshList() {
 	var entry ClimateReading
 	//initialize data list properly
-	dataList = AllData{Readings: make([]ClimateReading, 0, []int, []float32, []int)}
+	dataList = AllData{Readings: make([]ClimateReading, 0)}
+	//query database for all temp and humidity stores
+	results, err := mysqlDB.Query("SELECT Humidity, Temp, Time FROM climateData")
 
-	humidityRows, err := mysqlDB.Query("SELECT Humidity, Temp, Time FROM climateData")
+	//iterate through results and store into dataList
+	for results.Next() {
 
-	fmt.Printf("Sending the following: ")
-	for humidityRows.Next() {
-
-		err = humidityRows.Scan(&entry.Humidity, &entry.Temp, &entry.Time)
+		err = results.Scan(&entry.Humidity, &entry.Temp, &entry.Time)
 		checkError(err)
-
-		// fmt.Printf("humidity: %f \t temp: %f \t time: %d \n", entry.Humidity, entry.Temp, entry.Time)
+		//determine which emoji to display
+		determineMood(&entry)
 		dataList.Readings = append(dataList.Readings, entry)
 	}
 
+	//last read entry is the latest climate reading
 	dataList.LatestReading = entry
-	determineMood(entry)
 }
 
-func determineMood(currConditions ClimateReading) {
+//determines which emoji should be displayed to represent how monad might feel
+func determineMood(currConditions *ClimateReading) {
 	if currConditions.Temp > 83 {
-		dataList.LatestReading.Mood = "😿"
+		currConditions.Mood = "😿"
 	}
 	if currConditions.Temp > 76 && currConditions.Temp < 83 {
-		dataList.LatestReading.Mood = "😾"
+		currConditions.Mood = "😾"
 	}
 	if currConditions.Temp > 65 && currConditions.Temp < 76 {
-		dataList.LatestReading.Mood = "😻"
+		currConditions.Mood = "😻"
 	}
 
 	if currConditions.Humidity > 60 && currConditions.Humidity < 70 {
-		dataList.LatestReading.Mood = "😾"
+		currConditions.Mood = "😾"
 	}
 	if currConditions.Humidity > 70 {
-		dataList.LatestReading.Mood = "😿"
+		currConditions.Mood = "😿"
 	}
-
-	fmt.Println(dataList.LatestReading.Mood)
 }
 
 func serveTemplate(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("testing")
 	if len(r.URL.Path) > 1 {
 		return
 	}
@@ -93,8 +91,12 @@ func serveTemplate(w http.ResponseWriter, r *http.Request) {
 	fp := filepath.Join("templates", "climateDashboard.html")
 	tmpl, err := template.ParseFiles(fp)
 	checkError(err)
-	fmt.Println(dataList.Readings)
 	tmpl.Execute(w, dataList)
+}
+
+func JSONRequest(w http.ResponseWriter, r *http.Request) {
+	refreshList()
+	json.NewEncoder(w).Encode(dataList)
 }
 
 func main() {
@@ -103,6 +105,7 @@ func main() {
 
 	fs := http.FileServer(http.Dir("static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
+	http.HandleFunc("/climatereadings", JSONRequest)
 	http.HandleFunc("/", serveTemplate)
 	fmt.Println("serving at :8080")
 	http.ListenAndServe(":8080", nil)
