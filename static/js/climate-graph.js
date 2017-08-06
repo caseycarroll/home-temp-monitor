@@ -66,7 +66,7 @@ class ClimateGraph extends HTMLElement {
             height: componentRect.height,
             gridLineX: (componentRect.width - 32),
             gridLineY: (componentRect.height - 32),
-            barSize: (componentRect.width - 72) / 48,
+            barSize: (componentRect.width - 64) / 49,
             barFoundationPos: componentRect.height - 32
         }
     }
