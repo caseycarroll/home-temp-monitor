@@ -1,9 +1,10 @@
 html, body {
 	font-family: Arial, Helvetica, sans-serif;
 	background-color: #c1edff;
-	margin: 0px 0px 0px 0px;
-	width: 100vw;
-	height: 100vh;
+	margin-top: 0px;
+	margin-left: 0px;
+	width: 100%;
+	height: 100%;
 }
 
 h1 {
@@ -36,7 +37,7 @@ h3 {
 	justify-content: center;
 	background-image: linear-gradient( -30deg, rgba(210, 20, 130, 0.4) 0%, rgba(255, 0, 0, 0) ), url(../images/monad.webp);
 	background-size: cover;
-	 background-position: center; 
+	background-position: center; 
 	width: 100%;
 }
 
@@ -55,9 +56,11 @@ main {
 	height: 100%;
 	display: grid;
 	grid-template-columns: 1fr 1fr;
-	grid-template-rows: 25% 1fr 1fr;
+	grid-template-rows: 1fr 33% 33%;
 	justify-items: center;
 	align-items: center;
+	grid-row-gap: 32px;
+	margin-bottom: 32px;
 }
 
 .data-unit {
@@ -65,10 +68,12 @@ main {
 }
 
 climate-graph {
-	width: 100%;
+	width: 95%;
 	height: 100%;
 	background: white;
 	grid-column-end: span 3;
+	border-radius: 5px;
+	box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 }
 
 @keyframes emoji-motion{

@@ -18,6 +18,17 @@ class ClimateGraph extends HTMLElement {
     }
 
     connectedCallback() { 
+        var graphLabel = document.createElement("h2")
+        graphLabel.innerHTML = this.type == "temp" ? 'Temperature &#176F' : 'Humidity %'
+        console.log(this.type)
+        graphLabel.style.textAlign = "center"
+        graphLabel.style.marginTop = "8px"
+        graphLabel.style.fontFamily = "Patrick Hand SC"
+        graphLabel.style.position = "absolute"
+        graphLabel.style.right = "0px"
+        graphLabel.style.left = "0px"
+        this.shadow.appendChild(graphLabel)
+
         this._calculateGeometries()
         this._setupGraph()
         this._fetchClimateJSONData()
@@ -49,6 +60,48 @@ class ClimateGraph extends HTMLElement {
         gridLineY.setAttribute('y2', `${this.graph.gridLineY}`)
         gridLineY.style.stroke = "black"
         svgGraph.appendChild(gridLineY)
+
+        //add Y axis labels
+        if (this.type === "temp") {
+            for(let i = 0; i < 10; i++) {
+                let labelLine = document.createElementNS("http://www.w3.org/2000/svg", 'line')
+                let labelText = document.createElementNS("http://www.w3.org/2000/svg", "text")
+                labelText.innerHTML = (i * 5 + 50).toString()
+                let linePosY = this.graph.gridLineY - (this.graph.gridLineY * (i / 11.5))
+                labelText.setAttribute('x', '28')
+                labelText.setAttribute('y', `${linePosY}`)
+                labelText.style.textAnchor = "end"
+                labelText.style.fontSize = "10px"
+                labelText.style.opacity = "0.75"
+                labelLine.setAttribute('x1', '32')
+                labelLine.setAttribute('y1', `${linePosY}`)
+                labelLine.setAttribute('x2', `${this.graph.gridLineX}`)
+                labelLine.setAttribute('y2', `${linePosY}`)
+                labelLine.style.stroke = "gray"
+                svgGraph.appendChild(labelText)
+                svgGraph.appendChild(labelLine)
+            }
+        } else if (this.type === "humidity") {
+            for(let i = 0; i < 10; i++) {
+                let labelLine = document.createElementNS("http://www.w3.org/2000/svg", 'line')
+                let labelText = document.createElementNS("http://www.w3.org/2000/svg", "text")
+                labelText.innerHTML = (i * 10).toString()
+                let linePosY = this.graph.gridLineY - (this.graph.gridLineY * (i / 11.5))
+                labelText.setAttribute('x', '28')
+                labelText.setAttribute('y', `${linePosY}`)
+                labelText.style.textAnchor = "end"
+                labelText.style.fontSize = "10px"
+                labelText.style.opacity = "0.75"
+                labelLine.setAttribute('x1', '32')
+                labelLine.setAttribute('y1', `${linePosY}`)
+                labelLine.setAttribute('x2', `${this.graph.gridLineX}`)
+                labelLine.setAttribute('y2', `${linePosY}`)
+                labelLine.style.stroke = "gray"
+                svgGraph.appendChild(labelText)
+                svgGraph.appendChild(labelLine)
+            }
+        }
+        
         
         this.shadow.appendChild(svgGraph)
     }
@@ -108,11 +161,13 @@ class ClimateGraph extends HTMLElement {
                 
                 if (this.type === "temp") {
                     //temp graph will be from 50 degrees to 100, so we need to do some extra adjustments
-                    var heightValPercent = (element.temp / 100 - (1 - element.temp / 100))
-                    bar.style.fill = "pink"
+                    var heightValPercent = (element.temp / 100 - (1 - (element.temp / 100)))
+                    bar.style.fill = "rgba(255, 183, 196, 0.68)"
+                    //bar.style.stroke = "rgba(255, 183, 196, 0.68)"
                 } else if (this.type === "humidity") {
                     var heightValPercent = (element.humidity / 100)
-                    bar.style.fill = "cyan"
+                    bar.style.fill = "rgba(54, 255, 233, 0.63)"
+                    //bar.style.stroke = "rgba(54, 255, 233, 0.63)"
                 } else {
                     console.log("error: could not read type attribute")
                     return
