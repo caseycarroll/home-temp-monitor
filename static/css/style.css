@@ -2,6 +2,8 @@ html, body {
 	font-family: Arial, Helvetica, sans-serif;
 	background-color: #c1edff;
 	margin: 0px 0px 0px 0px;
+	width: 100vw;
+	height: 100vh;
 }
 
 h1 {
@@ -21,7 +23,7 @@ h2 {
 	font-family: 'Patrick Hand SC', cursive;
 }
 
-h3{
+h3 {
 	margin-top: 0px;
 	font-size: 1em;
 	margin-bottom: 0px;
@@ -29,75 +31,42 @@ h3{
 }
 
 .mood-container {
-	background-image: linear-gradient( -30deg, rgba(210, 20, 130, 0.4) 0%, rgba(255, 0, 0, 0) ), url(../images/monad.webp);
-	background-size: cover;
-	background-position: center;
-	width: 100%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	box-shadow: 0px 3px 11px 2px rgba(0, 0, 0, 0.4);
+	background-image: linear-gradient( -30deg, rgba(210, 20, 130, 0.4) 0%, rgba(255, 0, 0, 0) ), url(../images/monad.webp);
+	background-size: cover;
+	 background-position: center; 
+	width: 100%;
 }
 
 .emoji-emotion {
-	color: white;
-	text-align: center;
+	will-change: transform;
 	font-size: 56px;
 	transform: rotate(-30deg);
 	animation-name: emoji-motion;
 	animation-duration: 3000ms;
 	animation-iteration-count: infinite;
 	animation-timing-function: cubic-bezier(.34,0,.55,.97);
+	margin: 32px 32px 32px 32px;
 }
 
-.climate-data {
-	width: 100%;
-	height: 30vh;
-	display: inline-flex;
-	justify-content: space-around;
+main {
+	height: 100%;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-template-rows: 25% 1fr 1fr;
+	justify-items: center;
 	align-items: center;
 }
 
-.data-unit {
-	text-align: center;
-}
-
-.graphs-wrapper {
+climate-graph {
 	width: 100%;
-	height: 1200px;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: space-around
+	height: 100%;
+	background: white;
+	grid-column-end: span 3;
 }
 
-.graph-container {
-	background-color: white;
-	width: 100%;
-	max-width: 500px;
-	height: 500px;
-	border-radius: 3px;
-	box-shadow: 0px 3px 3px 2px rgba(0, 0, 0, 0.2);
-}
-
-.graph {
-	width: 400px;
-	background-color: rgba(255, 0, 0, 0.07);
-}
-
-.graph .grid {
-	stroke: #ccc;
-	stroke-dasharray: 0;
-	stroke-width: 1;
-}
-
-.x-labels text {
-	text-anchor: middle;
-}
-
-.y-labels text {
-	text-anchor: end;
-}
 @keyframes emoji-motion{
 	0% {
 		transform: rotate(-30deg);
