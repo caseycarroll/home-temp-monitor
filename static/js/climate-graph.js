@@ -67,7 +67,7 @@ class ClimateGraph extends HTMLElement {
                 let labelLine = document.createElementNS("http://www.w3.org/2000/svg", 'line')
                 let labelText = document.createElementNS("http://www.w3.org/2000/svg", "text")
                 labelText.innerHTML = (i * 5 + 50).toString()
-                let linePosY = this.graph.gridLineY - (this.graph.gridLineY * (i / 11.5))
+                let linePosY = this.graph.gridLineY - (this.graph.gridLineY * (i / 12))
                 labelText.setAttribute('x', '28')
                 labelText.setAttribute('y', `${linePosY}`)
                 labelText.style.textAnchor = "end"
@@ -86,7 +86,7 @@ class ClimateGraph extends HTMLElement {
                 let labelLine = document.createElementNS("http://www.w3.org/2000/svg", 'line')
                 let labelText = document.createElementNS("http://www.w3.org/2000/svg", "text")
                 labelText.innerHTML = (i * 10).toString()
-                let linePosY = this.graph.gridLineY - (this.graph.gridLineY * (i / 11.5))
+                let linePosY = this.graph.gridLineY - (this.graph.gridLineY * (i / 12))
                 labelText.setAttribute('x', '28')
                 labelText.setAttribute('y', `${linePosY}`)
                 labelText.style.textAnchor = "end"
