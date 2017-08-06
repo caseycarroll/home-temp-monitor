@@ -60,6 +60,10 @@ main {
 	align-items: center;
 }
 
+.data-unit {
+	text-align: center;
+}
+
 climate-graph {
 	width: 100%;
 	height: 100%;
