@@ -1,5 +1,9 @@
 class ClimateGraph extends HTMLElement {
 
+    /**
+     * 'type' is set in html to determine whether the graph should 
+     * display temperature data or humidity data.
+     */
     static get observedAttributes() {return ['type']}
 
     attributeChangedCallback(attr, oldValue, newValue) {
@@ -19,11 +23,16 @@ class ClimateGraph extends HTMLElement {
         this._fetchClimateJSONData()
     }
 
+    /**
+     * Creates an SVG element with a Y and X axis to mimic a graph
+     */
     _setupGraph() {
+        //create parent SVG element
         var svgGraph = document.createElementNS("http://www.w3.org/2000/svg", 'svg')
         svgGraph.setAttribute('width', `${this.graph.width}`)
         svgGraph.setAttribute('height', `${this.graph.height}`)
 
+        //create X axis
         var gridLineX = document.createElementNS("http://www.w3.org/2000/svg", 'line')
         gridLineX.setAttribute('x1', '32')
         gridLineX.setAttribute('y1', `${this.graph.gridLineY}`)
@@ -32,6 +41,7 @@ class ClimateGraph extends HTMLElement {
         gridLineX.style.stroke = "black"
         svgGraph.appendChild(gridLineX)
 
+        //create Y axis
         var gridLineY = document.createElementNS("http://www.w3.org/2000/svg", 'line')
         gridLineY.setAttribute('x1', '32')
         gridLineY.setAttribute('y1', '32')
@@ -43,6 +53,11 @@ class ClimateGraph extends HTMLElement {
         this.shadow.appendChild(svgGraph)
     }
 
+    /**
+     * Gets the size of the custom component and defines geometries for various 
+     * parts of the graph. 
+     * Allows for easier access of measurements across the web component
+     */
     _calculateGeometries() {
         var componentRect = this.getBoundingClientRect()
 
@@ -56,6 +71,9 @@ class ClimateGraph extends HTMLElement {
         }
     }
 
+    /**
+     * Use the fetch api to get the climate readings from the past 24 hours
+     */
     _fetchClimateJSONData() {
         let url = "http://192.168.1.8:8080/climatereadings"
         fetch(url).then( response => {
@@ -74,6 +92,11 @@ class ClimateGraph extends HTMLElement {
         })
     }
 
+    /**
+     * Creates svg rect objects that reflect the measurements returned by the API call 
+     * and appends them to the svg graph.
+     * @param {*the json object returned by fetch in _fetchClimateJSONData()} json 
+     */
     _appendBarsToGraph(json) {
         var graph = this.shadow.querySelector('svg')
         console.log(this.type)
@@ -84,6 +107,7 @@ class ClimateGraph extends HTMLElement {
                 let bar = document.createElementNS("http://www.w3.org/2000/svg", 'rect')
                 
                 if (this.type === "temp") {
+                    //temp graph will be from 50 degrees to 100, so we need to do some extra adjustments
                     var heightValPercent = (element.temp / 100 - (1 - element.temp / 100))
                     bar.style.fill = "pink"
                 } else if (this.type === "humidity") {
