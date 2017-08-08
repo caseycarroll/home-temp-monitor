@@ -69,9 +69,9 @@ main {
 
 climate-graph {
 	width: 95%;
+	max-width: 450px;
 	height: 100%;
 	background: white;
-	grid-column-end: span 3;
 	border-radius: 5px;
 	box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 }
@@ -89,4 +89,10 @@ climate-graph {
 		transform: rotate(-30deg);
 	}
 
+}
+
+@media (max-width: 500px) {
+	climate-graph {
+		grid-column-end: span 3;
+	}
 }

@@ -20,7 +20,6 @@ class ClimateGraph extends HTMLElement {
     connectedCallback() { 
         var graphLabel = document.createElement("h2")
         graphLabel.innerHTML = this.type == "temp" ? 'Temperature &#176F' : 'Humidity %'
-        console.log(this.type)
         graphLabel.style.textAlign = "center"
         graphLabel.style.marginTop = "8px"
         graphLabel.style.fontFamily = "Patrick Hand SC"
@@ -62,47 +61,29 @@ class ClimateGraph extends HTMLElement {
         svgGraph.appendChild(gridLineY)
 
         //add Y axis labels
-        if (this.type === "temp") {
-            for(let i = 0; i < 10; i++) {
-                let labelLine = document.createElementNS("http://www.w3.org/2000/svg", 'line')
-                let labelText = document.createElementNS("http://www.w3.org/2000/svg", "text")
+        for(let i = 0; i < 11; i++) {
+            let labelLine = document.createElementNS("http://www.w3.org/2000/svg", 'line')
+            let labelText = document.createElementNS("http://www.w3.org/2000/svg", "text")
+            if(this.type === "temp") {
                 labelText.innerHTML = (i * 5 + 50).toString()
-                let linePosY = this.graph.gridLineY - (this.graph.gridLineY * (i / 12))
-                labelText.setAttribute('x', '28')
-                labelText.setAttribute('y', `${linePosY}`)
-                labelText.style.textAnchor = "end"
-                labelText.style.fontSize = "10px"
-                labelText.style.opacity = "0.75"
-                labelLine.setAttribute('x1', '32')
-                labelLine.setAttribute('y1', `${linePosY}`)
-                labelLine.setAttribute('x2', `${this.graph.gridLineX}`)
-                labelLine.setAttribute('y2', `${linePosY}`)
-                labelLine.style.stroke = "gray"
-                svgGraph.appendChild(labelText)
-                svgGraph.appendChild(labelLine)
-            }
-        } else if (this.type === "humidity") {
-            for(let i = 0; i < 10; i++) {
-                let labelLine = document.createElementNS("http://www.w3.org/2000/svg", 'line')
-                let labelText = document.createElementNS("http://www.w3.org/2000/svg", "text")
+            } else { //humidity
                 labelText.innerHTML = (i * 10).toString()
-                let linePosY = this.graph.gridLineY - (this.graph.gridLineY * (i / 12))
-                labelText.setAttribute('x', '28')
-                labelText.setAttribute('y', `${linePosY}`)
-                labelText.style.textAnchor = "end"
-                labelText.style.fontSize = "10px"
-                labelText.style.opacity = "0.75"
-                labelLine.setAttribute('x1', '32')
-                labelLine.setAttribute('y1', `${linePosY}`)
-                labelLine.setAttribute('x2', `${this.graph.gridLineX}`)
-                labelLine.setAttribute('y2', `${linePosY}`)
-                labelLine.style.stroke = "gray"
-                svgGraph.appendChild(labelText)
-                svgGraph.appendChild(labelLine)
             }
+            let linePosY = this.graph.gridLineY - ((this.graph.gridLineY - 32) * (i / 10))
+            labelText.setAttribute('x', '28')
+            labelText.setAttribute('y', `${linePosY}`)
+            labelText.style.textAnchor = "end"
+            labelText.style.fontSize = "10px"
+            labelText.style.opacity = "0.75"
+            labelLine.setAttribute('x1', '32')
+            labelLine.setAttribute('y1', `${linePosY}`)
+            labelLine.setAttribute('x2', `${this.graph.gridLineX}`)
+            labelLine.setAttribute('y2', `${linePosY}`)
+            labelLine.style.stroke = "gray"
+            svgGraph.appendChild(labelText)
+            svgGraph.appendChild(labelLine)
         }
-        
-        
+
         this.shadow.appendChild(svgGraph)
     }
 
@@ -137,7 +118,7 @@ class ClimateGraph extends HTMLElement {
             }
         })
         .then(jsonResponse => {
-            console.log(jsonResponse)
+            console.log("displaying graph of type: " + this.type + "fetched json")
             this._appendBarsToGraph(jsonResponse)
         })
         .catch(error => {
@@ -152,7 +133,6 @@ class ClimateGraph extends HTMLElement {
      */
     _appendBarsToGraph(json) {
         var graph = this.shadow.querySelector('svg')
-        console.log(this.type)
 
         for (var key in json.Readings) {
             if (json.Readings.hasOwnProperty(key)) {
@@ -181,7 +161,7 @@ class ClimateGraph extends HTMLElement {
                 bar.setAttribute('height', `${barHeight}`)
 
                 bar.setAttribute('x', `${this.graph.barSize * key + 33}`)
-                bar.setAttribute('y', `${heightBuffer * (this.graph.barFoundationPos - 32) + 31}`)
+                bar.setAttribute('y', `${heightBuffer * (this.graph.barFoundationPos - 32) + 32}`)
                 
                 graph.appendChild(bar)
             }
