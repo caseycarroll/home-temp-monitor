@@ -18,16 +18,6 @@ class ClimateGraph extends HTMLElement {
     }
 
     connectedCallback() { 
-        var graphLabel = document.createElement("h2")
-        graphLabel.innerHTML = this.type == "temp" ? 'Temperature &#176F' : 'Humidity %'
-        graphLabel.style.textAlign = "center"
-        graphLabel.style.marginTop = "8px"
-        graphLabel.style.fontFamily = "Patrick Hand SC"
-        graphLabel.style.position = "absolute"
-        graphLabel.style.right = "0px"
-        graphLabel.style.left = "0px"
-        this.shadow.appendChild(graphLabel)
-
         this._calculateGeometries()
         this._setupGraph()
         this._fetchClimateJSONData()

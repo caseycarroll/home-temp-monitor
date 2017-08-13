@@ -96,6 +96,7 @@ func serveTemplate(w http.ResponseWriter, r *http.Request) {
 
 func sendClimateJSON(w http.ResponseWriter, r *http.Request) {
 	refreshList()
+	w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
 	json.NewEncoder(w).Encode(dataList)
 }
 
