@@ -28,11 +28,28 @@
 				<h3>humidity</h3>
 			</div>
 			
-			<climate-graph type="temp"></climate-graph>
-			<climate-graph type="humidity"></climate-graph>
-			
+			 <climate-graph type="temp"></climate-graph>
+			<climate-graph type="humidity"></climate-graph> 
 
 		</main>
-		 <script src="static/js/climate-graph.js"></script>
+		<script>
+			//fetch JSON from server
+			const readingsURL = "http://192.168.1.8:8080/climatereadings"
+			fetch(readingsURL)
+				.then (response => {
+					if(response.status !== 200) {
+						Promise.reject(new Error(response.statusText))
+					}
+					return response.json()
+				})
+				.then (data => {
+					//dispatch custom events to custom element when fetch completes
+					var fetchComplete = new CustomEvent('fetch-complete', {detail: data})
+					document.querySelectorAll('climate-graph').forEach( el => { el.dispatchEvent(fetchComplete) })
+				})
+				.catch( e => {console.log(e) })
+			
+		</script>
+		<script src="static/js/climate-graph.js"></script>
 	</body>
 </html>

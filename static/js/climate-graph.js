@@ -15,12 +15,12 @@ class ClimateGraph extends HTMLElement {
         //set up shadow root
         this.shadow = this.attachShadow({mode: 'open'})
         console.log("o hai i'm alive!")
+        this.addEventListener('fetch-complete', this._appendBarsToGraph)
     }
 
     connectedCallback() { 
         this._calculateGeometries()
         this._setupGraph()
-        this._fetchClimateJSONData()
     }
 
     /**
@@ -96,32 +96,12 @@ class ClimateGraph extends HTMLElement {
     }
 
     /**
-     * Use the fetch api to get the climate readings from the past 24 hours
-     */
-    _fetchClimateJSONData() {
-        let url = "http://192.168.1.8:8080/climatereadings"
-        fetch(url).then( response => {
-            if (response.status == 200) {
-                return response.json()
-            } else {
-                return Promise.reject(new Error(response.statusText))
-            }
-        })
-        .then(jsonResponse => {
-            console.log("displaying graph of type: " + this.type + "fetched json")
-            this._appendBarsToGraph(jsonResponse)
-        })
-        .catch(error => {
-            console.log(error)
-        })
-    }
-
-    /**
      * Creates svg rect objects that reflect the measurements returned by the API call 
      * and appends them to the svg graph.
      * @param {*the json object returned by fetch in _fetchClimateJSONData()} json 
      */
-    _appendBarsToGraph(json) {
+    _appendBarsToGraph(e) {
+        var json = e.detail
         var graph = this.shadow.querySelector('svg')
 
         for (var key in json.Readings) {
