@@ -9,19 +9,19 @@ html, body {
 
 h1 {
 	margin: 32px 32px 0px 32px;
-	font-family: 'Patrick Hand SC', cursive;
+	font-family: 'Arial Rounded MT Bold', cursive;
 }
 
 p {
 	margin-left: 32px;
-	font-family: 'Patrick Hand SC', cursive;
+	font-family: 'Arial Rounded MT Bold', cursive;
 }
 
 h2 {
 	margin-top: 0px;
 	margin-bottom: 0px;
 	font-size: 3em;
-	font-family: 'Patrick Hand SC', cursive;
+	font-family: 'Arial Rounded MT Bold', cursive;
 }
 
 h3 {
