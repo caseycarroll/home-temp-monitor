@@ -17,24 +17,6 @@
 			<h1>Monad's House 🏠</h1>
 			<p>Latest reading from {{.LatestReading.Time}}:</p>
 		</header>
-		<script async>
-			//fetch JSON from server
-			const readingsURL = "http://192.168.1.8:8080/climatereadings"
-			fetch(readingsURL)
-				.then (response => {
-					if(response.status !== 200) {
-						Promise.reject(new Error(response.statusText))
-					}
-					return response.json()
-				})
-				.then (data => {
-					//dispatch custom events to custom element when fetch completes
-					var fetchComplete = new CustomEvent('fetch-complete', {detail: data})
-					document.querySelectorAll('climate-graph').forEach( el => { el.dispatchEvent(fetchComplete) })
-				})
-				.catch( e => {console.log(e) })
-			
-		</script>
 		<main>
 			<div class="data-unit" id="temp">
 				<h2 id="curr_temp" aria-labelledby="temp-label">{{.LatestReading.Temp}}°F</h2>
@@ -54,6 +36,26 @@
 			</div>
 
 		</main>
-		<script defer src="static/js/climate-graph.js"></script>
+		<script src="static/js/climate-graph.js"></script>
+		<script defer>
+			//fetch JSON from server
+			const readingsURL = "http://192.168.1.8:8080/climatereadings"
+			debugger
+			fetch(readingsURL)
+				.then (response => {
+					if(response.status !== 200) {
+						Promise.reject(new Error(response.statusText))
+					}
+					return response.json()
+				})
+				.then (data => {
+					//dispatch custom events to custom element when fetch completes
+					var fetchComplete = new CustomEvent('fetch-complete', {detail: data})
+					console.log("dispatching event")
+					document.querySelectorAll('climate-graph').forEach( el => { el.dispatchEvent(fetchComplete) })
+				})
+				.catch( e => {console.log(e) })
+			
+		</script>
 	</body>
 </html>

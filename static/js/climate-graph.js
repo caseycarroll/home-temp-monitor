@@ -19,6 +19,7 @@ class ClimateGraph extends HTMLElement {
 
     connectedCallback() {
         if (this._calculateGeometries()) { //is successful
+            console.log("created event listener")
             this.addEventListener('fetch-complete', this._appendBarsToGraph)
             this._setupGraph()
         }
