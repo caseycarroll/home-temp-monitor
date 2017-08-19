@@ -26,9 +26,14 @@
 				<h2 id="curr_humidity">{{.LatestReading.Humidity}}</h2>
 				<h3>humidity</h3>
 			</div>
-			
-			 <climate-graph type="temp"></climate-graph>
-			<climate-graph type="humidity"></climate-graph> 
+			<div class="graph-container">
+				<h3>Temperature</h3>
+				<climate-graph type="temp"></climate-graph>
+			</div>
+			<div class="graph-container">
+				<h3>Humidity</h3>
+				<climate-graph type="humidity"></climate-graph> 
+			</div>
 
 		</main>
 		<script>

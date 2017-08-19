@@ -15,12 +15,13 @@ class ClimateGraph extends HTMLElement {
         //set up shadow root
         this.shadow = this.attachShadow({mode: 'open'})
         console.log("o hai i'm alive!")
-        this.addEventListener('fetch-complete', this._appendBarsToGraph)
     }
 
-    connectedCallback() { 
-        this._calculateGeometries()
-        this._setupGraph()
+    connectedCallback() {
+        if (this._calculateGeometries()) { //is successful
+            this.addEventListener('fetch-complete', this._appendBarsToGraph)
+            this._setupGraph()
+        }
     }
 
     /**
@@ -84,7 +85,10 @@ class ClimateGraph extends HTMLElement {
      */
     _calculateGeometries() {
         var componentRect = this.getBoundingClientRect()
-
+        if ( componentRect.width == 0 || componentRect.height == 0) {
+            console.log('Component not properly sized')
+            return false
+        }
         this.graph = {
             width: componentRect.width,
             height: componentRect.height,
@@ -93,6 +97,7 @@ class ClimateGraph extends HTMLElement {
             barSize: (componentRect.width - 64) / 49,
             barFoundationPos: componentRect.height - 32
         }
+        return true
     }
 
     /**
