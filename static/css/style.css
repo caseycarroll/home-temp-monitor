@@ -9,20 +9,20 @@ html, body {
 
 h1 {
 	margin: 32px 32px 0px 32px;
-	font-family: 'Arial Rounded MT Bold', 'Roboto Bold', cursive;
+	font-family: 'Arial Rounded MT Bold';
 }
 
 p {
 	margin-left: 32px;
 	opacity: 0.75;
-	font-family: 'Arial Rounded MT Bold', 'Roboto Bold', cursive;
+	font-family: 'Arial Rounded MT Bold';
 }
 
 h2 {
 	margin-top: 0px;
 	margin-bottom: 0px;
 	font-size: 2.5em;
-	font-family: 'Arial Rounded MT Bold', 'Roboto Bold', cursive;
+	font-family: 'Arial Rounded MT Bold';
 }
 
 h3 {
