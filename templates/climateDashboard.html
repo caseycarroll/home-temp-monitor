@@ -14,24 +14,24 @@
 			<div class="mood-container">
 				<span class="emoji-emotion" id="mood">{{.LatestReading.Mood}}</span>
 			</div>
-			<h1>Current Climate at Monad's House:</h1>
-			<p>Collected at {{.LatestReading.Time}}</p>
+			<h1>Monad's House 🏠</h1>
+			<p>Latest reading from {{.LatestReading.Time}}:</p>
 		</header>
 		<main>
 			<div class="data-unit" id="temp">
-				<h2 id="curr_temp">{{.LatestReading.Temp}}</h2>
-				<h3>temperature</h3>
+				<h2 id="curr_temp" aria-labelledby="temp-label">{{.LatestReading.Temp}}°F</h2>
+				<h3 id="temp-lable">temperature</h3>
 			</div>
 			<div class="data-unit" id="humidity">
-				<h2 id="curr_humidity">{{.LatestReading.Humidity}}</h2>
-				<h3>humidity</h3>
+				<h2 id="curr_humidity" aria-labelledby="hum-label">{{.LatestReading.Humidity}}%</h2>
+				<h3 id="hum-label">humidity</h3>
 			</div>
-			<div class="graph-container">
-				<h3>Temperature</h3>
+			<div class="graph-container" aria-label="A graph showing temperature level every half hour">
+				<h3>Temperature per half hour</h3>
 				<climate-graph type="temp"></climate-graph>
 			</div>
-			<div class="graph-container">
-				<h3>Humidity</h3>
+			<div class="graph-container" aria-label="A graph showing humidity level every half hour">
+				<h3>Humidity per half hour</h3>
 				<climate-graph type="humidity"></climate-graph> 
 			</div>
 
