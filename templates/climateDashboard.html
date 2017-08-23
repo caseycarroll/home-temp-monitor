@@ -39,22 +39,29 @@
 		<script src="static/js/climate-graph.js"></script>
 		<script defer>
 			//fetch JSON from server
-			const readingsURL = "http://192.168.1.8:8080/climatereadings"
-			fetch(readingsURL)
-				.then (response => {
-					if(response.status !== 200) {
-						Promise.reject(new Error(response.statusText))
-					}
-					return response.json()
+			let graphs = document.querySelectorAll('climate-graph')
+			let graphsLoaded = [...graphs].map(graph => {
+				return customElements.whenDefined(graph.localName)
+			})
+			console.log(graphsLoaded)
+			Promise.all(graphsLoaded)
+				.then( () => {
+					const readingsURL = "http://192.168.1.8:8080/climatereadings"
+					fetch(readingsURL)
+						.then (response => {
+							if(response.status !== 200) {
+								Promise.reject(new Error(response.statusText))
+							}
+							return response.json()
+						})
+						.then (data => {
+							//dispatch custom events to custom element when fetch completes
+							var fetchComplete = new CustomEvent('fetch-complete', {detail: data})
+							console.log("dispatching event")
+							document.querySelectorAll('climate-graph').forEach( el => { el.dispatchEvent(fetchComplete) })
+						})
+						.catch( e => {console.log(e) })
 				})
-				.then (data => {
-					//dispatch custom events to custom element when fetch completes
-					var fetchComplete = new CustomEvent('fetch-complete', {detail: data})
-					console.log("dispatching event")
-					document.querySelectorAll('climate-graph').forEach( el => { el.dispatchEvent(fetchComplete) })
-				})
-				.catch( e => {console.log(e) })
-			
 		</script>
 	</body>
 </html>
