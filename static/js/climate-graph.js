@@ -25,6 +25,10 @@ class ClimateGraph extends HTMLElement {
         }
     }
 
+    disconnectedCallback() {
+        this.removeEventListener('fetch-complete')
+    }
+
     /**
      * Creates an SVG element with a Y and X axis to mimic a graph
      */
