@@ -4,10 +4,20 @@ class ClimateGraph extends HTMLElement {
      * 'type' is set in html to determine whether the graph should 
      * display temperature data or humidity data.
      */
-    static get observedAttributes() {return ['type']}
+    static get observedAttributes() {return ['type', 'loadedreadings']}
+
+    set loadedreadings(value) {
+        this.climateReadings = value
+        this.setAttribute('loadedreadings', true)
+        this._appendBarsToGraph()
+    }
 
     attributeChangedCallback(attr, oldValue, newValue) {
-        this.type = newValue
+        switch(attr) {
+            case 'type':
+                this.type = newValue
+                break
+        }
     }
 
     constructor() {
@@ -18,15 +28,14 @@ class ClimateGraph extends HTMLElement {
     }
 
     connectedCallback() {
+        
+        if(!this.hasAttribute('loadedreadings')) {
+            this.setAttribute('loadedreadings', false)
+        }
+
         if (this._calculateGeometries()) { //is successful
-            console.log("created event listener")
-            this.addEventListener('fetch-complete', this._appendBarsToGraph)
             this._setupGraph()
         }
-    }
-
-    disconnectedCallback() {
-        this.removeEventListener('fetch-complete')
     }
 
     /**
@@ -110,8 +119,9 @@ class ClimateGraph extends HTMLElement {
      * and appends them to the svg graph.
      * @param {*the json object returned by fetch in _fetchClimateJSONData()} json 
      */
-    _appendBarsToGraph(e) {
-        var json = e.detail
+    _appendBarsToGraph() {
+        var json = this.climateReadings
+        console.log("test hello")
         var graph = this.shadow.querySelector('svg')
 
         for (var key in json.Readings) {
@@ -147,7 +157,6 @@ class ClimateGraph extends HTMLElement {
             }
         }
     }
-
 }
 
 customElements.define('climate-graph', ClimateGraph)

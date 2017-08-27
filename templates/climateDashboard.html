@@ -54,11 +54,12 @@
 							}
 							return response.json()
 						})
-						.then (data => {
+						.then (jsonResponse => {
 							//dispatch custom events to custom element when fetch completes
-							var fetchComplete = new CustomEvent('fetch-complete', {detail: data})
-							console.log("dispatching event")
-							document.querySelectorAll('climate-graph').forEach( el => { el.dispatchEvent(fetchComplete) })
+							// var fetchComplete = new CustomEvent('fetch-complete', {detail: jsonResponse})
+							// console.log("dispatching event")
+							// document.querySelectorAll('climate-graph').forEach( el => { el.dispatchEvent(fetchComplete) })
+							document.querySelectorAll('climate-graph').forEach( graph => { graph.loadedreadings = jsonResponse })
 						})
 						.catch( e => {console.log(e) })
 				})
